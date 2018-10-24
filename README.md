@@ -1,8 +1,6 @@
-本书使用`gitbook`编写，采用中英文对照的形式编写。欢迎参与进来，只为写更好的 Go 代码。
+本书使用`gitbook`编写，采用中英文对照的形式编写。欢迎参与进来，只为写更好的 Go 代码，[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)。
 
-gitbook：[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)
 
-github：https://github.com/LeungGeorge/Effective-Go
 
 ---
 
