@@ -4,7 +4,7 @@ gitbook：[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)
 
 github：[https://github.com/LeungGeorge/Effective-Go](https://github.com/LeungGeorge/Effective-Go)
 
-xx
+
 
 ---
 
