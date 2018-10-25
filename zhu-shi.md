@@ -10,7 +10,7 @@ Go 提供了 `C-style` 的块注释`/* */`和`C++ style`的行注释。通常情
 
 > Every package should have apackage comment, a block comment preceding the package clause. For multi-file packages, the package comment only needs to be present in one file, and any one will do. The package comment should introduce the package and provide information relevant to the package as a whole. It will appear first on the`godoc`page and should set up the detailed documentation that follows.
 
-```
+```go
 /*
 Package regexp implements a simple library for regular expressions.
 
@@ -37,7 +37,7 @@ package regexp
 
 > If the package is simple, the package comment can be brief.
 
-```
+```go
 // Package path implements utility routines for
 // manipulating slash-separated filename paths.
 ```
@@ -58,7 +58,7 @@ package regexp
 
 > Doc comments work best as complete sentences, which allow a wide variety of automated presentations. The first sentence should be a one-sentence summary that starts with the name being declared.
 
-```
+```go
 // Compile parses a regular expression and returns, if successful,
 // a Regexp that can be used to match against text.
 func Compile(str string) (*Regexp, error) {
@@ -68,7 +68,7 @@ func Compile(str string) (*Regexp, error) {
 
 > If every doc comment begins with the name of the item it describes, the output of`godoc`can usefully be run through`grep`. Imagine you couldn't remember the name "Compile" but were looking for the parsing function for regular expressions, so you ran the command,
 
-```
+```go
 $ godoc regexp | grep -i parse
 ```
 
@@ -76,7 +76,7 @@ $ godoc regexp | grep -i parse
 
 > If all the doc comments in the package began, "This function...",`grep`wouldn't help you remember the name. But because the package starts each doc comment with the name, you'd see something like this, which recalls the word you're looking for.
 
-```
+```go
 $ godoc regexp | grep parse
     Compile parses a regular expression and returns, if successful, a Regexp
     parsed. It simplifies safe initialization of global variables holding
@@ -88,7 +88,7 @@ Go的声明语法允许对声明进行分组。单个文档注释可以引入一
 
 > Go's declaration syntax allows grouping of declarations. A single doc comment can introduce a group of related constants or variables. Since the whole declaration is presented, such a comment can often be perfunctory.
 
-```
+```go
 // Error codes returned by failures to parse an expression.
 var (
     ErrInternal      = errors.New("regexp: internal error")
@@ -102,7 +102,7 @@ var (
 
 > Grouping can also indicate relationships between items, such as the fact that a set of variables is protected by a mutex.
 
-```
+```go
 var (
     countLock   sync.Mutex
     inputCount  uint32

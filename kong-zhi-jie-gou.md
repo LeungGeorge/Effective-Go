@@ -138,5 +138,42 @@ for key, value := range oldMap {
 }
 ```
 
+如你仅仅需要`range`的第一项（健或者索引），就丢掉第二个：
+
+> If you only need the first item in the range (the key or index), drop the second:
+
+```go
+for key := range m {
+    if key.expired() {
+        delete(m, key)
+    }
+}
+```
+
+> 如果你仅需要`range`的第二项（值），可以使用空白标识`_`下划线，以丢弃第一个：
+
+> If you only need the second item in the range (the value), use the blank identifier, an underscore, to discard the first:
+
+```go
+sum := 0
+for _, value := range array {
+    sum += value
+}
+```
+
+> xxx
+
+
+> The blank identifier has many uses, as described in a later section.
+> 
+> For strings, the range does more work for you, breaking out individual Unicode code points by parsing the UTF-8. Erroneous encodings consume one byte and produce the replacement rune U+FFFD. (The name (with associated builtin type) rune is Go terminology for a single Unicode code point. See the language specification for details.) The loop
+
+```go
+for pos, char := range "日本\x80語" { // \x80 is an illegal UTF-8 encoding
+    fmt.Printf("character %#U starts at byte position %d\n", char, pos)
+}
+```
+
+
 
 
