@@ -31,7 +31,7 @@ p := new(SyncedBuffer)  // type *SyncedBuffer
 var v SyncedBuffer      // type  SyncedBuffer
 ```
 
-### 构造函数和符合文字
+### 构造函数和复合文字
 
 有时候，零值并不是很好，这时一个初始化构造函数就很有必要了，就如同这个从`os`包中提取的例子。
 
