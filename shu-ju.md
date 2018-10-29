@@ -1,6 +1,7 @@
 
 ### 使用`new`分配
 
+
 `Go`有两个分配原语。内置函数`new`和`make`。它们会干不同的事情，分配不同的类型，虽然有点迷惑人，但区分规则很简单。我们先来说`new`。它是一个内置的分配内存的函数，但它在其他语言中的同名兄弟，它不会初始化内存，仅仅是初始为零值。也就是说，`new(T)`分配了一个类型为T的条目，并且被初始化为零值的存储空间，并返回它的地址，类型为`*T`。在Go的术语中，它返回了一个指针，指向类型为`T`的新分配的零值。
 
 > Go has two allocation primitives, the built-in functions new and make. They do different things and apply to different types, which can be confusing, but the rules are simple. Let's talk about new first. It's a built-in function that allocates memory, but unlike its namesakes in some other languages it does not initialize the memory, it only zeros it. That is, new(T) allocates zeroed storage for a new item of type T and returns its address, a value of type *T. In Go terminology, it returns a pointer to a newly allocated zero value of type T.
