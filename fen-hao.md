@@ -6,7 +6,7 @@
 >
 > The rule is this. If the last token before a newline is an identifier \(which includes words like`int`and`float64`\), a basic literal such as a number or string constant, or one of the tokens
 
-```
+```go
 break continue fallthrough return ++ -- ) }
 ```
 
@@ -18,7 +18,7 @@ break continue fallthrough return ++ -- ) }
 >
 > A semicolon can also be omitted immediately before a closing brace, so a statement such as
 
-```
+```go
   go func() { for { dst <- <-src } }()
 ```
 
@@ -30,7 +30,7 @@ break continue fallthrough return ++ -- ) }
 >
 > One consequence of the semicolon insertion rules is that you cannot put the opening brace of a control structure \(`if`,`for`,`switch`, or`select`\) on the next line. If you do, a semicolon will be inserted before the brace, which could cause unwanted effects. Write them like this
 
-```
+```go
 if i < f() {
     g()
 }
@@ -40,7 +40,7 @@ if i < f() {
 
 > not like this
 
-```
+```go
 if i < f()  // wrong!
 {           // wrong!
     g()

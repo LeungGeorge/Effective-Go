@@ -138,5 +138,167 @@ for key, value := range oldMap {
 }
 ```
 
+如你仅仅需要`range`的第一项（健或者索引），就丢掉第二个：
+
+> If you only need the first item in the range (the key or index), drop the second:
+
+```go
+for key := range m {
+    if key.expired() {
+        delete(m, key)
+    }
+}
+```
+
+如果你仅需要`range`的第二项（值），可以使用空白标识`_`下划线，以丢弃第一个：
+
+> If you only need the second item in the range (the value), use the blank identifier, an underscore, to discard the first:
+
+```go
+sum := 0
+for _, value := range array {
+    sum += value
+}
+```
+
+空白标识符有很多用处，接下来的一节我们会对此详述。
+
+对于字符串，`range`为你可以做更过的事情，通过解析`UTF-8`编码来拆分单个`Unicode`编码点。错误的编码会小号一个字节，并产生一个替换性的符文`U+FFFD`。
+（`rune`（相关的内置类型）这个词是`Go`中的术语，用以标记单个`Unicode`编码点。到[语言规范](https://golang.org/ref/spec#Rune_literals)查看更多详情）。循环
+
+> The blank identifier has many uses, as described in a later section.
+> 
+> For strings, the range does more work for you, breaking out individual Unicode code points by parsing the UTF-8. Erroneous encodings consume one byte and produce the replacement rune U+FFFD. (The name (with associated builtin type) rune is Go terminology for a single Unicode code point. See [the language specification](https://golang.org/ref/spec#Rune_literals) for details.) The loop
+
+```go
+for pos, char := range "日本\x80語" { // \x80 is an illegal UTF-8 encoding
+    fmt.Printf("character %#U starts at byte position %d\n", char, pos)
+}
+```
+
+打印如下：
+
+> prints
+
+```go
+character U+65E5 '日' starts at byte position 0
+character U+672C '本' starts at byte position 3
+character U+FFFD '�' starts at byte position 6
+character U+8A9E '語' starts at byte position 7
+```
+
+最后，`Go`没有都好运算符，`++`和`--`谁语句而不是表达式。因此，如果你想在for中运行多个变量，你应该是用并行赋值（虽然这样会妨碍使用`++`和`--`）
 
 
+> Finally, Go has no comma operator and ++ and -- are statements not expressions. Thus if you want to run multiple variables in a for you should use parallel assignment (although that precludes ++ and --).
+
+
+```go
+// Reverse a
+for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+    a[i], a[j] = a[j], a[i]
+}
+```
+
+### Switch
+
+Go的`switch`比`C`的更加通用。表达式不必是常量，甚至是整数，`case`从上到下的顺序进行求值，直到匹配。如果`switch`没有表达式，则它回匹配`true`。`switch`就像是一个`if-else-if-else`的链。
+
+
+> Go's switch is more general than C's. The expressions need not be constants or even integers, the cases are evaluated top to bottom until a match is found, and if the switch has no expression it switches on true. It's therefore possible—and idiomatic—to write an if-else-if-else chain as a switch.
+
+```go
+func unhex(c byte) byte {
+    switch {
+    case '0' <= c && c <= '9':
+        return c - '0'
+    case 'a' <= c && c <= 'f':
+        return c - 'a' + 10
+    case 'A' <= c && c <= 'F':
+        return c - 'A' + 10
+    }
+    return 0
+}
+```
+
+Go中，switch不会自动通过case，但是case条件可以以逗号表达式列表的形式展示。
+
+> There is no automatic fall through, but cases can be presented in comma-separated lists.
+
+```go
+func shouldEscape(c byte) bool {
+    switch c {
+    case ' ', '?', '&', '=', '#', '+', '%':
+        return true
+    }
+    return false
+}
+```
+
+break语句可以用来结束一个switch，尽管在Go中并不像在其他语言中那么常见。但是，有时候需要需要跳出一个循环，而不是switch，在Go中可以通过设置一个标号来中断循环。下面的例子会演示这两种用法：
+
+
+> Although they are not nearly as common in Go as some other C-like languages, break statements can be used to terminate a switch early. Sometimes, though, it's necessary to break out of a surrounding loop, not the switch, and in Go that can be accomplished by putting a label on the loop and "breaking" to that label. This example shows both uses.
+
+
+```go
+Loop:
+	for n := 0; n < len(src); n += size {
+		switch {
+		case src[n] < sizeOne:
+			if validateOnly {
+				break
+			}
+			size = 1
+			update(src[n])
+
+		case src[n] < sizeTwo:
+			if n+1 >= len(src) {
+				err = errShortInput
+				break Loop
+			}
+			if validateOnly {
+				break
+			}
+			size = 2
+			update(src[n] + src[n+1]<<shift)
+		}
+	}
+```
+
+当然，continue语句可以接受一个可选的标号，但是它只能应用于循环。
+
+为结束这一节，这里有一个使用switch语句对字节切片进行比较的例子。
+
+> Of course, the continue statement also accepts an optional label but it applies only to loops.
+> 
+> To close this section, here's a comparison routine for byte slices that uses two switch statements。
+
+```go
+// Compare returns an integer comparing the two byte slices,
+// lexicographically.
+// The result will be 0 if a == b, -1 if a < b, and +1 if a > b
+func Compare(a, b []byte) int {
+    for i := 0; i < len(a) && i < len(b); i++ {
+        switch {
+        case a[i] > b[i]:
+            return 1
+        case a[i] < b[i]:
+            return -1
+        }
+    }
+    switch {
+    case len(a) > len(b):
+        return 1
+    case len(a) < len(b):
+        return -1
+    }
+    return 0
+}
+```
+
+### Type switch
+
+`switch`也可以用来发现接口变量的动态类型。这种`type switch`使用类型断言，括号中使用关键字`type`。如果在switch在表达式中声明了一个变量，则变量在每个子句中就会有响应的类型。在这种情况下复用名字也是习惯用法，声明一个变量，在每个子句中类型不同，但有着相同的名字。
+
+> A switch can also be used to discover the dynamic type of an interface variable. Such a type switch uses the syntax of a type assertion with the keyword type inside the parentheses. If the switch declares a variable in the expression, the variable will have the corresponding type in each clause. It's also idiomatic to reuse the name in such cases, in effect declaring a new variable with the same name but a different type in each case.

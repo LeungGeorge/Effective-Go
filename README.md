@@ -1,4 +1,9 @@
-本书使用`gitbook`编写，采用中英文对照的形式编写。欢迎参与进来，只为写更好的 Go 代码，[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)。
+本书使用`gitbook`编写，采用中英文对照的形式编写。欢迎参与进来，只为写更好的 Go 代码。
+
+gitbook：[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)
+
+github：[Effective-Go](https://github.com/LeungGeorge/Effective-Go)
+
 
 Go 是一种新的编程语言。虽然借鉴了现有编程语言的思想，但它有一些不同寻常的特性，使得高效的 Go 程序，在性质上不同于它的亲属语言编写的程序。直截了当的把 C++ 程序或者 Java 程序翻译成 Go 程序，不大可能打到令人满意度结果（毕竟 Java 程序不是用 Go 写的）。另一方面，从 Go 的角度看来这个问题，可能创造一个成功的但完全不同的程序。换句话说，要想把 Go 写好，理解它的特性和习惯用法是很重要的。了解 Go 编程中既有的约定也很重要，比如命名，格式化，程序结构等等，这会让你使编写的 Go 程序更易于理解。
 
