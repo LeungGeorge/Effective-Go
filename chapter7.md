@@ -57,16 +57,20 @@ func NewFile(fd int, name string) *File {
 
 The fields of a composite literal are laid out in order and must all be present. However, by labeling the elements explicitly as
 
-field
-
-`:`
-
-value
-
-pairs, the initializers can appear in any order, with the missing ones left as their respective zero values. Thus we could say
+field`:`value pairs, the initializers can appear in any order, with the missing ones left as their respective zero values. Thus we could say
 
 ```go
  return &File{fd: fd, name: name}
+```
+
+As a limiting case, if a composite literal contains no fields at all, it creates a zero value for the type. The expressions`new(File)`and`&File{}`are equivalent.
+
+Composite literals can also be created for arrays, slices, and maps, with the field labels being indices or map keys as appropriate. In these examples, the initializations work regardless of the values of`Enone`,`Eio`, and`Einval`, as long as they are distinct.
+
+```go
+a := [...]string   {Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
+s := []string      {Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
+m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 ```
 
 
