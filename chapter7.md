@@ -47,7 +47,9 @@ func NewFile(fd int, name string) *File {
 }
 ```
 
-There's a lot of boiler plate in there. We can simplify it using acomposite literal, which is an expression that creates a new instance each time it is evaluated.
+这里有很多的示例。我们可以使用复合文字简化它，即，使用一个表达式创建一个新示例。
+
+> There's a lot of boiler plate in there. We can simplify it using a composite literal, which is an expression that creates a new instance each time it is evaluated.
 
 ```go
 func NewFile(fd int, name string) *File {
