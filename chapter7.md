@@ -47,7 +47,7 @@ func NewFile(fd int, name string) *File {
 }
 ```
 
-这里有很多的示例。我们可以使用复合文字简化它，即，使用一个表达式创建一个新示例。
+这里有很多的示例。我们可以使用复合文字简化它，即，使用一个表达式创建一个新实例。
 
 > There's a lot of boiler plate in there. We can simplify it using a composite literal, which is an expression that creates a new instance each time it is evaluated.
 
