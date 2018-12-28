@@ -125,34 +125,28 @@ array)  // Note the explicit address-of operator
 
 But even this style isn't idiomatic Go. Use slices instead.
 
-
-
 ### Slices {#slices}
 
 Slices wrap arrays to give a more general, powerful, and convenient interface to sequences of data. Except for items with explicit dimension such as transformation matrices, most array programming in Go is done with slices rather than simple arrays.
 
 Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. A`Read`function can therefore accept a slice argument rather than a pointer and a count; the length within the slice sets an upper limit of how much data to read. Here is the signature of the`Read`method of the`File`type in package`os`:
 
-```
+```go
 func (f *File) Read(buf []byte) (n int, err error)
-
 ```
 
 The method returns the number of bytes read and an error value, if any. To read into the first 32 bytes of a larger buffer`buf`,slice\(here used as a verb\) the buffer.
 
-```
+```go
     n, err := f.Read(buf[0:32])
-
 ```
 
 Such slicing is common and efficient. In fact, leaving efficiency aside for the moment, the following snippet would also read the first 32 bytes of the buffer.
 
-```
+```go
     var n int
     var err error
-    for i := 0; i 
-<
- 32; i++ {
+    for i := 0; i < 32; i++ {
         nbytes, e := f.Read(buf[i:i+1])  // Read one byte.
         if nbytes == 0 || e != nil {
             err = e
@@ -160,7 +154,6 @@ Such slicing is common and efficient. In fact, leaving efficiency aside for the 
         }
         n += nbytes
     }
-
 ```
 
 The length of a slice may be changed as long as it still fits within the limits of the underlying array; just assign it to a slice of itself. Thecapacityof a slice, accessible by the built-in function`cap`, reports the maximum length the slice may assume. Here is a function to append data to a slice. If the data exceeds the capacity, the slice is reallocated. The resulting slice is returned. The function uses the fact that`len`and`cap`are legal when applied to the`nil`slice, and return 0.
@@ -181,7 +174,6 @@ func Append(slice, data []byte) []byte {
     copy(slice[l:], data)
     return slice
 }
-
 ```
 
 We must return the slice afterwards because, although`Append`can modify the elements of`slice`, the slice itself \(the run-time data structure holding the pointer, length, and capacity\) is passed by value.
@@ -195,18 +187,16 @@ Go's arrays and slices are one-dimensional. To create the equivalent of a 2D arr
 ```
 type Transform [3][3]float64  // A 3x3 array, really an array of arrays.
 type LinesOfText [][]byte     // A slice of byte slices.
-
 ```
 
 Because slices are variable-length, it is possible to have each inner slice be a different length. That can be a common situation, as in our`LinesOfText`example: each line has an independent length.
 
 ```
 text := LinesOfText{
-	[]byte("Now is the time"),
-	[]byte("for all good gophers"),
-	[]byte("to bring some fun to the party."),
+    []byte("Now is the time"),
+    []byte("for all good gophers"),
+    []byte("to bring some fun to the party."),
 }
-
 ```
 
 Sometimes it's necessary to allocate a 2D slice, a situation that can arise when processing scan lines of pixels, for instance. There are two ways to achieve this. One is to allocate each slice independently; the other is to allocate a single array and point the individual slices into it. Which to use depends on your application. If the slices might grow or shrink, they should be allocated independently to avoid overwriting the next line; if not, it can be more efficient to construct the object with a single allocation. For reference, here are sketches of the two methods. First, a line at a time:
@@ -216,9 +206,8 @@ Sometimes it's necessary to allocate a 2D slice, a situation that can arise when
 picture := make([][]uint8, YSize) // One row per unit of y.
 // Loop over the rows, allocating the slice for each row.
 for i := range picture {
-	picture[i] = make([]uint8, XSize)
+    picture[i] = make([]uint8, XSize)
 }
-
 ```
 
 And now as one allocation, sliced into lines:
@@ -230,14 +219,13 @@ picture := make([][]uint8, YSize) // One row per unit of y.
 pixels := make([]uint8, XSize*YSize) // Has type []uint8 even though picture is [][]uint8.
 // Loop over the rows, slicing each row from the front of the remaining pixels slice.
 for i := range picture {
-	picture[i], pixels = pixels[:XSize], pixels[XSize:]
+    picture[i], pixels = pixels[:XSize], pixels[XSize:]
 }
-
 ```
 
 ### Maps {#maps}
 
-Maps are a convenient and powerful built-in data structure that associate values of one type \(the_key_\) with values of another type \(the_element_or_value_\). The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces \(as long as the dynamic type supports equality\), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
+Maps are a convenient and powerful built-in data structure that associate values of one type \(the_key_\) with values of another type \(the_element\_or\_value_\). The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces \(as long as the dynamic type supports equality\), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
 
 Maps can be constructed using the usual composite literal syntax with colon-separated key-value pairs, so it's easy to build them during initialization.
 
@@ -249,14 +237,12 @@ var timeZone = map[string]int{
     "MST": -7*60*60,
     "PST": -8*60*60,
 }
-
 ```
 
 Assigning and fetching map values looks syntactically just like doing the same for arrays and slices except that the index doesn't need to be an integer.
 
 ```
 offset := timeZone["EST"]
-
 ```
 
 An attempt to fetch a map value with a key that is not present in the map will return the zero value for the type of the entries in the map. For instance, if the map contains integers, looking up a non-existent key will return`0`. A set can be implemented as a map with value type`bool`. Set the map entry to`true`to put the value in the set, and then test it by simple indexing.
@@ -271,7 +257,6 @@ attended := map[string]bool{
 if attended[person] { // will be false if person is not in the map
     fmt.Println(person, "was at the meeting")
 }
-
 ```
 
 Sometimes you need to distinguish a missing entry from a zero value. Is there an entry for`"UTC"`or is that 0 because it's not in the map at all? You can discriminate with a form of multiple assignment.
@@ -280,7 +265,6 @@ Sometimes you need to distinguish a missing entry from a zero value. Is there an
 var seconds int
 var ok bool
 seconds, ok = timeZone[tz]
-
 ```
 
 For obvious reasons this is called the “comma ok” idiom. In this example, if`tz`is present,`seconds`will be set appropriately and`ok`will be true; if not,`seconds`will be set to zero and`ok`will be false. Here's a function that puts it together with a nice error report:
@@ -293,21 +277,18 @@ func offset(tz string) int {
     log.Println("unknown time zone:", tz)
     return 0
 }
-
 ```
 
 To test for presence in the map without worrying about the actual value, you can use the[blank identifier](https://golang.org/doc/effective_go.html#blank)\(`_`\) in place of the usual variable for the value.
 
 ```
 _, present := timeZone[tz]
-
 ```
 
 To delete a map entry, use the`delete`built-in function, whose arguments are the map and the key to be deleted. It's safe to do this even if the key is already absent from the map.
 
 ```
 delete(timeZone, "PDT")  // Now on Standard Time
-
 ```
 
 ### Printing {#printing}
@@ -321,7 +302,6 @@ fmt.Printf("Hello %d\n", 23)
 fmt.Fprint(os.Stdout, "Hello ", 23, "\n")
 fmt.Println("Hello", 23)
 fmt.Println(fmt.Sprint("Hello ", 23))
-
 ```
 
 The formatted print functions`fmt.Fprint`and friends take as a first argument any object that implements the`io.Writer`interface; the variables`os.Stdout`and`os.Stderr`are familiar instances.
@@ -334,28 +314,24 @@ var x uint64 = 1
 <
 64 - 1
 fmt.Printf("%d %x; %d %x\n", x, x, int64(x), int64(x))
-
 ```
 
 prints
 
 ```
 18446744073709551615 ffffffffffffffff; -1 -1
-
 ```
 
-If you just want the default conversion, such as decimal for integers, you can use the catchall format`%v`\(for “value”\); the result is exactly what`Print`and`Println`would produce. Moreover, that format can print_any_value, even arrays, slices, structs, and maps. Here is a print statement for the time zone map defined in the previous section.
+If you just want the default conversion, such as decimal for integers, you can use the catchall format`%v`\(for “value”\); the result is exactly what`Print`and`Println`would produce. Moreover, that format can print\_any\_value, even arrays, slices, structs, and maps. Here is a print statement for the time zone map defined in the previous section.
 
 ```
 fmt.Printf("%v\n", timeZone)  // or just fmt.Println(timeZone)
-
 ```
 
 which gives output
 
 ```
 map[CST:-21600 PST:-28800 EST:-18000 UTC:0 MST:-25200]
-
 ```
 
 For maps the keys may be output in any order, of course. When printing a struct, the modified format`%+v`annotates the fields of the structure with their names, and for any value the alternate format`%#v`prints the value in full Go syntax.
@@ -373,7 +349,6 @@ fmt.Printf("%v\n", t)
 fmt.Printf("%+v\n", t)
 fmt.Printf("%#v\n", t)
 fmt.Printf("%#v\n", timeZone)
-
 ```
 
 prints
@@ -388,23 +363,20 @@ prints
 &
 main.T{a:7, b:-2.35, c:"abc\tdef"}
 map[string] int{"CST":-21600, "PST":-28800, "EST":-18000, "UTC":0, "MST":-25200}
-
 ```
 
-\(Note the ampersands.\) That quoted string format is also available through`%q`when applied to a value of type`string`or`[]byte`. The alternate format`%#q`will use backquotes instead if possible. \(The`%q`format also applies to integers and runes, producing a single-quoted rune constant.\) Also,`%x`works on strings, byte arrays and byte slices as well as on integers, generating a long hexadecimal string, and with a space in the format \(`% x`\) it puts spaces between the bytes.
+\(Note the ampersands.\) That quoted string format is also available through`%q`when applied to a value of type`string`or`[]byte`. The alternate format`%#q`will use backquotes instead if possible. \(The`%q`format also applies to integers and runes, producing a single-quoted rune constant.\) Also,`%x`works on strings, byte arrays and byte slices as well as on integers, generating a long hexadecimal string, and with a space in the format \(`% x`\) it puts spaces between the bytes.
 
-Another handy format is`%T`, which prints the_type_of a value.
+Another handy format is`%T`, which prints the\_type\_of a value.
 
 ```
 fmt.Printf("%T\n", timeZone)
-
 ```
 
 prints
 
 ```
 map[string] int
-
 ```
 
 If you want to control the default format for a custom type, all that's required is to define a method with the signature`String() string`on the type. For our simple type`T`, that might look like this.
@@ -414,17 +386,15 @@ func (t *T) String() string {
     return fmt.Sprintf("%d/%g/%q", t.a, t.b, t.c)
 }
 fmt.Printf("%v\n", t)
-
 ```
 
 to print in the format
 
 ```
 7/-2.35/"abc\tdef"
-
 ```
 
-\(If you need to print_values_of type`T`as well as pointers to`T`, the receiver for`String`must be of value type; this example used a pointer because that's more efficient and idiomatic for struct types. See the section below on[pointers vs. value receivers](https://golang.org/doc/effective_go.html#pointers_vs_values)for more information.\)
+\(If you need to print\_values\_of type`T`as well as pointers to`T`, the receiver for`String`must be of value type; this example used a pointer because that's more efficient and idiomatic for struct types. See the section below on[pointers vs. value receivers](https://golang.org/doc/effective_go.html#pointers_vs_values)for more information.\)
 
 Our`String`method is able to call`Sprintf`because the print routines are fully reentrant and can be wrapped this way. There is one important detail to understand about this approach, however: don't construct a`String`method by calling`Sprintf`in a way that will recur into your`String`method indefinitely. This can happen if the`Sprintf`call attempts to print the receiver directly as a string, which in turn will invoke the method again. It's a common and easy mistake to make, as this example shows.
 
@@ -434,7 +404,6 @@ type MyString string
 func (m MyString) String() string {
     return fmt.Sprintf("MyString=%s", m) // Error: will recur forever.
 }
-
 ```
 
 It's also easy to fix: convert the argument to the basic string type, which does not have the method.
@@ -444,7 +413,6 @@ type MyString string
 func (m MyString) String() string {
     return fmt.Sprintf("MyString=%s", string(m)) // OK: note conversion.
 }
-
 ```
 
 In the[initialization section](https://golang.org/doc/effective_go.html#initialization)we'll see another technique that avoids this recursion.
@@ -453,7 +421,6 @@ Another printing technique is to pass a print routine's arguments directly to an
 
 ```
 func Printf(format string, v ...interface{}) (n int, err error) {
-
 ```
 
 Within the function`Printf`,`v`acts like a variable of type`[]interface{}`but if it is passed to another variadic function, it acts like a regular list of arguments. Here is the implementation of the function`log.Println`we used above. It passes its arguments directly to`fmt.Sprintln`for the actual formatting.
@@ -463,7 +430,6 @@ Within the function`Printf`,`v`acts like a variable of type`[]interface{}`but if
 func Println(v ...interface{}) {
     std.Output(2, fmt.Sprintln(v...))  // Output takes parameters (int, string)
 }
-
 ```
 
 We write`...`after`v`in the nested call to`Sprintln`to tell the compiler to treat`v`as a list of arguments; otherwise it would just pass`v`as a single slice argument.
@@ -487,7 +453,6 @@ func Min(a ...int) int {
     }
     return min
 }
-
 ```
 
 ### Append {#append}
@@ -511,7 +476,6 @@ What`append`does is append the elements to the end of the slice and return the r
 x := []int{1,2,3}
 x = append(x, 4, 5, 6)
 fmt.Println(x)
-
 ```
 
 prints`[1 2 3 4 5 6]`. So`append`works a little like`Printf`, collecting an arbitrary number of arguments.
@@ -523,11 +487,7 @@ x := []int{1,2,3}
 y := []int{4,5,6}
 x = append(x, y...)
 fmt.Println(x)
-
 ```
 
 Without that`...`, it wouldn't compile because the types would be wrong;`y`is not of type`int`.
-
-  
-
 
