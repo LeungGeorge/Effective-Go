@@ -69,7 +69,7 @@ func NewFile(fd int, name string) *File {
     return &File{fd, name, nil, 0}
 ```
 
-复合文字的字段按序列出，并且所有字段都要使用。
+复合文字的字段按序列出，并且所有字段都要使用到。然而，通过显式的成对列出字段名：字段值，就可以以任意次序初始化了，\(就不再受次序限制了）
 
 > The fields of a composite literal are laid out in order and must all be present. However, by labeling the elements explicitly as field`:`value pairs, the initializers can appear in any order, with the missing ones left as their respective zero values. Thus we could say
 
