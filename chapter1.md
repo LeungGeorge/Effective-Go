@@ -1,3 +1,5 @@
+# effective go（中英对照）
+
 格式问题是最具争议但影响最小的问题。人们可以适应不同的格式风格，但如果他们不必这样做就更好了（鬼知道有没有强迫症），这样就不必专门花时间去讨论遵循相同风格的问题了。问题是如何在没有冗长风格指南的情况下实现这个乌托邦。
 
 > Formatting issues are the most contentious but the least consequential. People can adapt to different formatting styles but it's better if they don't have to, and less time is devoted to the topic if everyone adheres to the same style. The problem is how to approach this Utopia without a long prescriptive style guide.

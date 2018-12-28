@@ -1,3 +1,5 @@
+# 格式
+
 Go 提供了 `C-style` 的块注释`/* */`和`C++ style`的行注释。通常情况下用行注释；块注释大多数作为包注释，在表达式中或者禁用大量代码时也是非常有用得。
 
 > Go provides C-style`/* */`block comments and C++-style `//` line comments. Line comments are the norm; block comments appear mostly as package comments, but are useful within an expression or to disable large swaths of code.
