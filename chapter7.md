@@ -69,7 +69,9 @@ func NewFile(fd int, name string) *File {
     return &File{fd, name, nil, 0}
 ```
 
-The fields of a composite literal are laid out in order and must all be present. However, by labeling the elements explicitly as field`:`value pairs, the initializers can appear in any order, with the missing ones left as their respective zero values. Thus we could say
+复合文字的字段按序列出，并且所有字段都要使用。
+
+> The fields of a composite literal are laid out in order and must all be present. However, by labeling the elements explicitly as field`:`value pairs, the initializers can appear in any order, with the missing ones left as their respective zero values. Thus we could say
 
 ```go
  return &File{fd: fd, name: name}
