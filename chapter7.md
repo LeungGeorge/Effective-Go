@@ -199,7 +199,7 @@ text := LinesOfText{
 
 Sometimes it's necessary to allocate a 2D slice, a situation that can arise when processing scan lines of pixels, for instance. There are two ways to achieve this. One is to allocate each slice independently; the other is to allocate a single array and point the individual slices into it. Which to use depends on your application. If the slices might grow or shrink, they should be allocated independently to avoid overwriting the next line; if not, it can be more efficient to construct the object with a single allocation. For reference, here are sketches of the two methods. First, a line at a time:
 
-```
+```go
 // Allocate the top-level slice.
 picture := make([][]uint8, YSize) // One row per unit of y.
 // Loop over the rows, allocating the slice for each row.
@@ -210,7 +210,7 @@ for i := range picture {
 
 And now as one allocation, sliced into lines:
 
-```
+```go
 // Allocate the top-level slice, the same as before.
 picture := make([][]uint8, YSize) // One row per unit of y.
 // Allocate one large slice to hold all the pixels.
@@ -227,7 +227,7 @@ Maps are a convenient and powerful built-in data structure that associate values
 
 Maps can be constructed using the usual composite literal syntax with colon-separated key-value pairs, so it's easy to build them during initialization.
 
-```
+```go
 var timeZone = map[string]int{
     "UTC":  0*60*60,
     "EST": -5*60*60,
@@ -239,13 +239,13 @@ var timeZone = map[string]int{
 
 Assigning and fetching map values looks syntactically just like doing the same for arrays and slices except that the index doesn't need to be an integer.
 
-```
+```go
 offset := timeZone["EST"]
 ```
 
 An attempt to fetch a map value with a key that is not present in the map will return the zero value for the type of the entries in the map. For instance, if the map contains integers, looking up a non-existent key will return`0`. A set can be implemented as a map with value type`bool`. Set the map entry to`true`to put the value in the set, and then test it by simple indexing.
 
-```
+```go
 attended := map[string]bool{
     "Ann": true,
     "Joe": true,
@@ -259,7 +259,7 @@ if attended[person] { // will be false if person is not in the map
 
 Sometimes you need to distinguish a missing entry from a zero value. Is there an entry for`"UTC"`or is that 0 because it's not in the map at all? You can discriminate with a form of multiple assignment.
 
-```
+```go
 var seconds int
 var ok bool
 seconds, ok = timeZone[tz]
@@ -267,7 +267,7 @@ seconds, ok = timeZone[tz]
 
 For obvious reasons this is called the “comma ok” idiom. In this example, if`tz`is present,`seconds`will be set appropriately and`ok`will be true; if not,`seconds`will be set to zero and`ok`will be false. Here's a function that puts it together with a nice error report:
 
-```
+```go
 func offset(tz string) int {
     if seconds, ok := timeZone[tz]; ok {
         return seconds
@@ -279,13 +279,13 @@ func offset(tz string) int {
 
 To test for presence in the map without worrying about the actual value, you can use the[blank identifier](https://golang.org/doc/effective_go.html#blank)\(`_`\) in place of the usual variable for the value.
 
-```
+```go
 _, present := timeZone[tz]
 ```
 
 To delete a map entry, use the`delete`built-in function, whose arguments are the map and the key to be deleted. It's safe to do this even if the key is already absent from the map.
 
-```
+```go
 delete(timeZone, "PDT")  // Now on Standard Time
 ```
 
@@ -295,7 +295,7 @@ Formatted printing in Go uses a style similar to C's`printf`family but is richer
 
 You don't need to provide a format string. For each of`Printf`,`Fprintf`and`Sprintf`there is another pair of functions, for instance`Print`and`Println`. These functions do not take a format string but instead generate a default format for each argument. The`Println`versions also insert a blank between arguments and append a newline to the output while the`Print`versions add blanks only if the operand on neither side is a string. In this example each line produces the same output.
 
-```
+```go
 fmt.Printf("Hello %d\n", 23)
 fmt.Fprint(os.Stdout, "Hello ", 23, "\n")
 fmt.Println("Hello", 23)
@@ -306,11 +306,8 @@ The formatted print functions`fmt.Fprint`and friends take as a first argument an
 
 Here things start to diverge from C. First, the numeric formats such as`%d`do not take flags for signedness or size; instead, the printing routines use the type of the argument to decide these properties.
 
-```
-var x uint64 = 1
-<
-<
-64 - 1
+```go
+var x uint64 = 1<<64 - 1
 fmt.Printf("%d %x; %d %x\n", x, x, int64(x), int64(x))
 ```
 
