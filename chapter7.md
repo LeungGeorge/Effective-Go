@@ -47,7 +47,7 @@ func NewFile(fd int, name string) *File {
 }
 ```
 
-There's a lot of boiler plate in there. We can simplify it using acomposite literal, which is an expression that creates a new instance each time it is evaluated.func NewFile\(fd int, name string\) \*File {
+There's a lot of boiler plate in there. We can simplify it using acomposite literal, which is an expression that creates a new instance each time it is evaluated.
 
 ```go
 func NewFile(fd int, name string) *File {
@@ -58,8 +58,6 @@ func NewFile(fd int, name string) *File {
     return &f
 }
 ```
-
-
 
 注意，与`C`不同，在`Go`中返回局部变量的地址是完全没问题的，与变量相关的存储在函数返回后不会释放。事实上，获取复合文字的地址时，每个新的实例有一个地址，因此我们可以
 
