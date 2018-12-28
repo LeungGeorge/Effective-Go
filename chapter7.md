@@ -79,7 +79,7 @@ func NewFile(fd int, name string) *File {
 
 一个极端的情况，若复合文字中不包含任何字段，它会创建为这个类型的零值。表达式`new(File)和&File{}`是等值的。
 
-复合文字也可以用来创建arrays，slices 和 maps，字段标号使用索引或 map key。再这些例子中，不论`Enone`、`Eio`和`Einval`，的取值如何，只要不同即可负责成功。
+复合文字也可以用来创建arrays，slices 和 maps，字段标号使用索引或 map key。再这些例子中，不论`Enone`、`Eio`和`Einval`的取值如何，只要不同即可初始化。
 
 > As a limiting case, if a composite literal contains no fields at all, it creates a zero value for the type. The expressions`new(File)`and`&File{}`are equivalent.
 >
