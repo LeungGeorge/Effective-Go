@@ -47,7 +47,21 @@ func NewFile(fd int, name string) *File {
 }
 ```
 
-注意，与`C`不同，在`Go`中返回局部变量的地址是完全没问题的，与变量相关的存储在函数返回后不会释放。事实上，
+There's a lot of boiler plate in there. We can simplify it using acomposite literal, which is an expression that creates a new instance each time it is evaluated.func NewFile\(fd int, name string\) \*File {
+
+```go
+func NewFile(fd int, name string) *File {
+    if fd < 0 {
+        return nil
+    }
+    f := File{fd, name, nil, 0}
+    return &f
+}
+```
+
+
+
+注意，与`C`不同，在`Go`中返回局部变量的地址是完全没问题的，与变量相关的存储在函数返回后不会释放。事实上，获取复合文字的地址时，每个新的实例有一个地址，因此我们可以
 
 > Note that, unlike in C, it's perfectly OK to return the address of a local variable; the storage associated with the variable survives after the function returns. In fact, taking the address of a composite literal allocates a fresh instance each time it is evaluated, so we can combine these last two lines.
 
