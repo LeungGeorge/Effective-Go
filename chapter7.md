@@ -319,27 +319,25 @@ prints
 
 If you just want the default conversion, such as decimal for integers, you can use the catchall format`%v`\(for “value”\); the result is exactly what`Print`and`Println`would produce. Moreover, that format can print\_any\_value, even arrays, slices, structs, and maps. Here is a print statement for the time zone map defined in the previous section.
 
-```
+```go
 fmt.Printf("%v\n", timeZone)  // or just fmt.Println(timeZone)
 ```
 
 which gives output
 
-```
+```go
 map[CST:-21600 PST:-28800 EST:-18000 UTC:0 MST:-25200]
 ```
 
 For maps the keys may be output in any order, of course. When printing a struct, the modified format`%+v`annotates the fields of the structure with their names, and for any value the alternate format`%#v`prints the value in full Go syntax.
 
-```
+```go
 type T struct {
     a int
     b float64
     c string
 }
-t := 
-&
-T{ 7, -2.35, "abc\tdef" }
+t := &T{ 7, -2.35, "abc\tdef" }
 fmt.Printf("%v\n", t)
 fmt.Printf("%+v\n", t)
 fmt.Printf("%#v\n", t)
@@ -348,15 +346,10 @@ fmt.Printf("%#v\n", timeZone)
 
 prints
 
-```
-&
-{7 -2.35 abc   def}
-
-&
-{a:7 b:-2.35 c:abc     def}
-
-&
-main.T{a:7, b:-2.35, c:"abc\tdef"}
+```go
+&{7 -2.35 abc   def}
+&{a:7 b:-2.35 c:abc     def}
+&main.T{a:7, b:-2.35, c:"abc\tdef"}
 map[string] int{"CST":-21600, "PST":-28800, "EST":-18000, "UTC":0, "MST":-25200}
 ```
 
@@ -364,19 +357,19 @@ map[string] int{"CST":-21600, "PST":-28800, "EST":-18000, "UTC":0, "MST":-25200}
 
 Another handy format is`%T`, which prints the\_type\_of a value.
 
-```
+```go
 fmt.Printf("%T\n", timeZone)
 ```
 
 prints
 
-```
+```go
 map[string] int
 ```
 
 If you want to control the default format for a custom type, all that's required is to define a method with the signature`String() string`on the type. For our simple type`T`, that might look like this.
 
-```
+```go
 func (t *T) String() string {
     return fmt.Sprintf("%d/%g/%q", t.a, t.b, t.c)
 }
@@ -385,7 +378,7 @@ fmt.Printf("%v\n", t)
 
 to print in the format
 
-```
+```go
 7/-2.35/"abc\tdef"
 ```
 
@@ -393,7 +386,7 @@ to print in the format
 
 Our`String`method is able to call`Sprintf`because the print routines are fully reentrant and can be wrapped this way. There is one important detail to understand about this approach, however: don't construct a`String`method by calling`Sprintf`in a way that will recur into your`String`method indefinitely. This can happen if the`Sprintf`call attempts to print the receiver directly as a string, which in turn will invoke the method again. It's a common and easy mistake to make, as this example shows.
 
-```
+```go
 type MyString string
 
 func (m MyString) String() string {
@@ -403,7 +396,7 @@ func (m MyString) String() string {
 
 It's also easy to fix: convert the argument to the basic string type, which does not have the method.
 
-```
+```go
 type MyString string
 func (m MyString) String() string {
     return fmt.Sprintf("MyString=%s", string(m)) // OK: note conversion.
@@ -414,13 +407,13 @@ In the[initialization section](https://golang.org/doc/effective_go.html#initiali
 
 Another printing technique is to pass a print routine's arguments directly to another such routine. The signature of`Printf`uses the type`...interface{}`for its final argument to specify that an arbitrary number of parameters \(of arbitrary type\) can appear after the format.
 
-```
+```go
 func Printf(format string, v ...interface{}) (n int, err error) {
 ```
 
 Within the function`Printf`,`v`acts like a variable of type`[]interface{}`but if it is passed to another variadic function, it acts like a regular list of arguments. Here is the implementation of the function`log.Println`we used above. It passes its arguments directly to`fmt.Sprintln`for the actual formatting.
 
-```
+```go
 // Println prints to the standard logger in the manner of fmt.Println.
 func Println(v ...interface{}) {
     std.Output(2, fmt.Sprintln(v...))  // Output takes parameters (int, string)
@@ -433,16 +426,11 @@ There's even more to printing than we've covered here. See the`godoc`documentati
 
 By the way, a`...`parameter can be of a specific type, for instance`...int`for a min function that chooses the least of a list of integers:
 
-```
+```go
 func Min(a ...int) int {
-    min := int(^uint(0) 
->
->
- 1)  // largest int
+    min := int(^uint(0) >> 1)  // largest int
     for _, i := range a {
-        if i 
-<
- min {
+        if i < min {
             min = i
         }
     }
@@ -454,20 +442,15 @@ func Min(a ...int) int {
 
 Now we have the missing piece we needed to explain the design of the`append`built-in function. The signature of`append`is different from our custom`Append`function above. Schematically, it's like this:
 
-```
-func append(slice []
-T
-, elements ...
-T
-) []
-T
+```go
+func append(slice []T, elements ...T) []T
 ```
 
 whereTis a placeholder for any given type. You can't actually write a function in Go where the type`T`is determined by the caller. That's why`append`is built in: it needs support from the compiler.
 
 What`append`does is append the elements to the end of the slice and return the result. The result needs to be returned because, as with our hand-written`Append`, the underlying array may change. This simple example
 
-```
+```go
 x := []int{1,2,3}
 x = append(x, 4, 5, 6)
 fmt.Println(x)
@@ -477,7 +460,7 @@ prints`[1 2 3 4 5 6]`. So`append`works a little like`Printf`, collecting an arbi
 
 But what if we wanted to do what our`Append`does and append a slice to a slice? Easy: use`...`at the call site, just as we did in the call to`Output`above. This snippet produces identical output to the one above.
 
-```
+```go
 x := []int{1,2,3}
 y := []int{4,5,6}
 x = append(x, y...)
