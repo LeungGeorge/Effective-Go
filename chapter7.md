@@ -77,7 +77,6 @@ Back to allocation. The built-in function`make(T,`args`)`serves a purpose differ
 
 ```go
 make([]int, 10, 100)
-
 ```
 
 allocates an array of 100 ints and then creates a slice structure with length 10 and a capacity of 100 pointing at the first 10 elements of the array. \(When making a slice, the capacity can be omitted; see the section on slices for more information.\) In contrast,`new([]int)`returns a pointer to a newly allocated, zeroed slice structure, that is, a pointer to a`nil`slice value.
@@ -94,9 +93,48 @@ var p *[]int = new([]int)
 
 // Idiomatic:
 v := make([]int, 100)
+```
+
+Remember that`make`applies only to maps, slices and channels and does not return a pointer. To obtain an explicit pointer allocate with`new`or take the address of a variable explicitly.
+
+
+
+### Arrays {#arrays}
+
+Arrays are useful when planning the detailed layout of memory and sometimes can help avoid allocation, but primarily they are a building block for slices, the subject of the next section. To lay the foundation for that topic, here are a few words about arrays.
+
+There are major differences between the ways arrays work in Go and C. In Go,
+
+* Arrays are values. Assigning one array to another copies all the elements.
+* In particular, if you pass an array to a function, it will receive a
+  copy
+  of the array, not a pointer to it.
+* The size of an array is part of its type. The types
+  `[10]int`
+  and
+  `[20]int`
+  are distinct.
+
+The value property can be useful but also expensive; if you want C-like behavior and efficiency, you can pass a pointer to the array.
+
+```go
+func Sum(a *[3]float64) (sum float64) {
+    for _, v := range *a {
+        sum += v
+    }
+    return
+}
+
+array := [...]float64{7.0, 8.5, 9.1}
+x := Sum(
+&
+array)  // Note the explicit address-of operator
 
 ```
 
-Remember that`make`applies only to maps, slices and channels and does not return a pointer. To obtain an explicit pointer allocate with`new`or take the address of a variable explicitly.  
+But even this style isn't idiomatic Go. Use slices instead.
+
+
+
 
 
