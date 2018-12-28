@@ -313,7 +313,7 @@ fmt.Printf("%d %x; %d %x\n", x, x, int64(x), int64(x))
 
 prints
 
-```
+```go
 18446744073709551615 ffffffffffffffff; -1 -1
 ```
 
