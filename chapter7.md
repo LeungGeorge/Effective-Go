@@ -158,12 +158,10 @@ Such slicing is common and efficient. In fact, leaving efficiency aside for the 
 
 The length of a slice may be changed as long as it still fits within the limits of the underlying array; just assign it to a slice of itself. Thecapacityof a slice, accessible by the built-in function`cap`, reports the maximum length the slice may assume. Here is a function to append data to a slice. If the data exceeds the capacity, the slice is reallocated. The resulting slice is returned. The function uses the fact that`len`and`cap`are legal when applied to the`nil`slice, and return 0.
 
-```
+```go
 func Append(slice, data []byte) []byte {
     l := len(slice)
-    if l + len(data) 
->
- cap(slice) {  // reallocate
+    if l + len(data) > cap(slice) {  // reallocate
         // Allocate double what's needed, for future growth.
         newSlice := make([]byte, (l+len(data))*2)
         // The copy function is predeclared and works for any slice type.
@@ -184,14 +182,14 @@ The idea of appending to a slice is so useful it's captured by the`append`built-
 
 Go's arrays and slices are one-dimensional. To create the equivalent of a 2D array or slice, it is necessary to define an array-of-arrays or slice-of-slices, like this:
 
-```
+```go
 type Transform [3][3]float64  // A 3x3 array, really an array of arrays.
 type LinesOfText [][]byte     // A slice of byte slices.
 ```
 
 Because slices are variable-length, it is possible to have each inner slice be a different length. That can be a common situation, as in our`LinesOfText`example: each line has an independent length.
 
-```
+```go
 text := LinesOfText{
     []byte("Now is the time"),
     []byte("for all good gophers"),
