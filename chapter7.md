@@ -77,10 +77,10 @@ func NewFile(fd int, name string) *File {
  return &File{fd: fd, name: name}
 ```
 
-
+举一个受限的例子，若复合文字中不包含任何字段，它会创建为这个类型的零值。表达式`new(File)和&File{}`是等值的。
 
 > As a limiting case, if a composite literal contains no fields at all, it creates a zero value for the type. The expressions`new(File)`and`&File{}`are equivalent.
-
+>
 > Composite literals can also be created for arrays, slices, and maps, with the field labels being indices or map keys as appropriate. In these examples, the initializations work regardless of the values of`Enone`,`Eio`, and`Einval`, as long as they are distinct.
 
 ```go
