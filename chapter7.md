@@ -93,7 +93,11 @@ m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 
 ### 用make分配
 
-Back to allocation. The built-in function`make(T,`args`)`serves a purpose different from`new(T)`. It creates slices, maps, and channels only, and it returns an_initialized_\(not_zeroed_\) value of type`T`\(not`*T`\). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data \(inside an array\), the length, and the capacity, and until those items are initialized, the slice is`nil`. For slices, maps, and channels,`make`initializes the internal data structure and prepares the value for use. For instance,
+回到（资源）分配。内置函数`make(T,`args`)`提供了一种不同于`new(T)`目的。..aaa流量
+
+。。。
+
+> Back to allocation. The built-in function`make(T,`args\)`)`serves a purpose different from`new(T)`. It creates slices, maps, and channels only, and it returns an_initialized_\(not_zeroed_\) value of type`T`\(not`*T`\). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data \(inside an array\), the length, and the capacity, and until those items are initialized, the slice is`nil`. For slices, maps, and channels,`make`initializes the internal data structure and prepares the value for use. For instance,
 
 ```go
 make([]int, 10, 100)
@@ -138,9 +142,7 @@ func Sum(a *[3]float64) (sum float64) {
 }
 
 array := [...]float64{7.0, 8.5, 9.1}
-x := Sum(
-&
-array)  // Note the explicit address-of operator
+x := Sum(&array)  // Note the explicit address-of operator
 ```
 
 But even this style isn't idiomatic Go. Use slices instead.
