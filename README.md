@@ -15,8 +15,9 @@ Go 是一门新的编程语言。虽然借鉴了现有编程语言的思想，�
 > The [Go package sources](https://golang.org/src/) are intended to serve not only as the core library but also as examples of how to use the language. Moreover, many of the packages contain working, self-contained executable examples you can run directly from the[golang.org](https://golang.org/)web site, such as [this one](https://golang.org/pkg/strings/#example_Map) \(if necessary, click on the word "Example" to open it up\). If you have a question about how to approach a problem or how something might be implemented, the documentation, code and examples in the library can provide answers, ideas and background.
 
 
-> 本书使用`gitbook`编写，采用中英文对照的形式编写。欢迎参与进来，只为写更好的 Go 代码。
->  
-> gitbook：[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)
->  
-> github：[Effective-Go](https://github.com/LeungGeorge/Effective-Go)
+
+本书使用`gitbook`编写，采用中英文对照的形式编写。欢迎参与进来，只为写更好的 Go 代码。
+  
+gitbook：[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)
+  
+github：[Effective-Go](https://github.com/LeungGeorge/Effective-Go)
