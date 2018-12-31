@@ -14,10 +14,27 @@ Go 是一门新的编程语言。虽然借鉴了现有编程语言的思想，�
 
 > The [Go package sources](https://golang.org/src/) are intended to serve not only as the core library but also as examples of how to use the language. Moreover, many of the packages contain working, self-contained executable examples you can run directly from the[golang.org](https://golang.org/)web site, such as [this one](https://golang.org/pkg/strings/#example_Map) \(if necessary, click on the word "Example" to open it up\). If you have a question about how to approach a problem or how something might be implemented, the documentation, code and examples in the library can provide answers, ideas and background.
 
-
-
 本书使用`gitbook`编写，采用中英文对照的形式编写。欢迎参与进来，只为写更好的 Go 代码。
   
 gitbook：[点击阅读](https://leunggeorge.gitbooks.io/effective-go/content/)
   
 github：[Effective-Go](https://github.com/LeungGeorge/Effective-Go)
+
+## 目录
+
+* [简介](README.md)
+* [格式](chapter1.md)
+* [注释](chapter2.md)
+* [名字](chapter3.md)
+* [分号](chapter4.md)
+* [控制结构](chapter5.md)
+* [函数](chapter6.md)
+* [数据](chapter7.md)
+* [初始化](chapter8.md)
+* [方法](chapter9.md)
+* [接口和其他类型](chapter10.md)
+* [空白标识符](chapter11.md)
+* [内嵌](chapter12.md)
+* [并发](chapter13.md)
+* [错误](chapter14.md)
+* [web服务器](chapter15.md)
