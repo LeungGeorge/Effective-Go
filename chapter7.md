@@ -95,9 +95,9 @@ m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 
 ### 用make分配
 
-回到（资源）分配。内置函数`make(T,`args`)`提供了一种不同于`new(T)`目的。..aaa流量
+说到（资源）分配。内置函数 `make(T, args)` 与 `new(T)` 的作用略有不同。`make` 仅用来创建 slices, maps, and channels
 
-> Back to allocation. The built-in function`make(T,`args\)`)`serves a purpose different from`new(T)`. It creates slices, maps, and channels only, and it returns an_initialized_\(not_zeroed_\) value of type`T`\(not`*T`\). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data \(inside an array\), the length, and the capacity, and until those items are initialized, the slice is`nil`. For slices, maps, and channels,`make`initializes the internal data structure and prepares the value for use. For instance,
+> Back to allocation. The built-in function`make(T,args)`serves a purpose different from`new(T)`. It creates slices, maps, and channels only, and it returns an _initialized_ (not _zeroed_) value of type`T`(not`*T`). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data \(inside an array\), the length, and the capacity, and until those items are initialized, the slice is`nil`. For slices, maps, and channels,`make`initializes the internal data structure and prepares the value for use. For instance,
 
 ```go
 make([]int, 10, 100)
