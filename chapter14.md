@@ -1,10 +1,10 @@
-## Errors {#errors}
+## Errors 
 
 Library routines must often return some sort of error indication to the caller. As mentioned earlier, Go's multivalue return makes it easy to return a detailed error description alongside the normal return value. It is good style to use this feature to provide detailed error information. For example, as we'll see,`os.Open`doesn't just return a`nil`pointer on failure, it also returns an error value that describes what went wrong.
 
 By convention, errors have type`error`, a simple built-in interface.
 
-```
+```go
 type error interface {
     Error() string
 }
@@ -13,7 +13,7 @@ type error interface {
 
 A library writer is free to implement this interface with a richer model under the covers, making it possible not only to see the error but also to provide some context. As mentioned, alongside the usual`*os.File`return value,`os.Open`also returns an error value. If the file is opened successfully, the error will be`nil`, but when there is a problem, it will hold an`os.PathError`:
 
-```
+```go
 // PathError records an error and the operation and
 // file path that caused it.
 type PathError struct {
@@ -30,7 +30,7 @@ func (e *PathError) Error() string {
 
 `PathError`'s`Error`generates a string like this:
 
-```
+```go
 open /etc/passwx: no such file or directory
 
 ```
@@ -41,7 +41,7 @@ When feasible, error strings should identify their origin, such as by having a p
 
 Callers that care about the precise error details can use a type switch or a type assertion to look for specific errors and extract details. For`PathErrors`this might include examining the internal`Err`field for recoverable failures.
 
-```
+```go
 
 for try := 0; try < 2; try++ {
     file, err = os.Create(filename)
@@ -58,13 +58,13 @@ for try := 0; try < 2; try++ {
 
 The second`if`statement here is another[type assertion](https://docs.huihoo.com/go/golang.org/doc/effective_go.html#interface_conversions). If it fails,`ok`will be false, and`e`will be`nil`. If it succeeds,`ok`will be true, which means the error was of type`*os.PathError`, and then so is`e`, which we can examine for more information about the error.
 
-### Panic {#panic}
+### Panic 
 
 The usual way to report an error to a caller is to return an`error`as an extra return value. The canonical`Read`method is a well-known instance; it returns a byte count and an`error`. But what if the error is unrecoverable? Sometimes the program simply cannot continue.
 
 For this purpose, there is a built-in function`panic`that in effect creates a run-time error that will stop the program \(but see the next section\). The function takes a single argument of arbitrary type—often a string—to be printed as the program dies. It's also a way to indicate that something impossible has happened, such as exiting an infinite loop.
 
-```
+```go
 
 // A toy implementation of cube root using Newton's method.
 func CubeRoot(x float64) float64 {
@@ -83,7 +83,7 @@ func CubeRoot(x float64) float64 {
 
 This is only an example but real library functions should avoid`panic`. If the problem can be masked or worked around, it's always better to let things continue to run rather than taking down the whole program. One possible counterexample is during initialization: if the library truly cannot set itself up, it might be reasonable to panic, so to speak.
 
-```
+```go
 var user = os.Getenv("USER")
 
 func init() {
@@ -94,7 +94,7 @@ func init() {
 
 ```
 
-### Recover {#recover}
+### Recover 
 
 When`panic`is called, including implicitly for run-time errors such as indexing a slice out of bounds or failing a type assertion, it immediately stops execution of the current function and begins unwinding the stack of the goroutine, running any deferred functions along the way. If that unwinding reaches the top of the goroutine's stack, the program dies. However, it is possible to use the built-in function`recover`to regain control of the goroutine and resume normal execution.
 
@@ -102,7 +102,7 @@ A call to`recover`stops the unwinding and returns the argument passed to`panic`.
 
 One application of`recover`is to shut down a failing goroutine inside a server without killing the other executing goroutines.
 
-```
+```go
 func server(workChan <-chan *Work) {
     for work := range workChan {
         go safelyDo(work)
@@ -126,7 +126,7 @@ Because`recover`always returns`nil`unless called directly from a deferred functi
 
 With our recovery pattern in place, the`do`function \(and anything it calls\) can get out of any bad situation cleanly by calling`panic`. We can use that idea to simplify error handling in complex software. Let's look at an idealized version of a`regexp`package, which reports parsing errors by calling`panic`with a local error type. Here's the definition of`Error`, an`error`method, and the`Compile`function.
 
-```
+```go
 // Error is the type of a parse error; it satisfies the error interface.
 type Error string
 func (e Error) Error() string {
@@ -158,7 +158,7 @@ If`doParse`panics, the recovery block will set the return value to`nil`—deferr
 
 With error handling in place, the`error`method \(because it's a method bound to a type, it's fine, even natural, for it to have the same name as the builtin`error`type\) makes it easy to report parse errors without worrying about unwinding the parse stack by hand:
 
-```
+```go
 if pos == 0 {
     re.error("'*' illegal at start of expression")
 }

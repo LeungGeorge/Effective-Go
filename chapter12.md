@@ -1,10 +1,10 @@
-## Embedding {#embedding}
+## Embedding 
 
 Go does not provide the typical, type-driven notion of subclassing, but it does have the ability to “borrow” pieces of an implementation by_embedding_types within a struct or interface.
 
 Interface embedding is very simple. We've mentioned the`io.Reader`and`io.Writer`interfaces before; here are their definitions.
 
-```
+```go
 type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -17,7 +17,7 @@ type Writer interface {
 
 The`io`package also exports several other interfaces that specify objects that can implement several such methods. For instance, there is`io.ReadWriter`, an interface containing both`Read`and`Write`. We could specify`io.ReadWriter`by listing the two methods explicitly, but it's easier and more evocative to embed the two interfaces to form the new one, like this:
 
-```
+```go
 // ReadWriter is the interface that combines the Reader and Writer interfaces.
 type ReadWriter interface {
     Reader
@@ -30,7 +30,7 @@ This says just what it looks like: A`ReadWriter`can do what a`Reader`does_and_wh
 
 The same basic idea applies to structs, but with more far-reaching implications. The`bufio`package has two struct types,`bufio.Reader`and`bufio.Writer`, each of which of course implements the analogous interfaces from package`io`. And`bufio`also implements a buffered reader/writer, which it does by combining a reader and a writer into one struct using embedding: it lists the types within the struct but does not give them field names.
 
-```
+```go
 // ReadWriter stores pointers to a Reader and a Writer.
 // It implements io.ReadWriter.
 type ReadWriter struct {
@@ -42,7 +42,7 @@ type ReadWriter struct {
 
 The embedded elements are pointers to structs and of course must be initialized to point to valid structs before they can be used. The`ReadWriter`struct could be written as
 
-```
+```go
 type ReadWriter struct {
     reader *Reader
     writer *Writer
@@ -52,7 +52,7 @@ type ReadWriter struct {
 
 but then to promote the methods of the fields and to satisfy the`io`interfaces, we would also need to provide forwarding methods, like this:
 
-```
+```go
 func (rw *ReadWriter) Read(p []byte) (n int, err error) {
     return rw.reader.Read(p)
 }
@@ -65,7 +65,7 @@ There's an important way in which embedding differs from subclassing. When we em
 
 Embedding can also be a simple convenience. This example shows an embedded field alongside a regular, named field.
 
-```
+```go
 type Job struct {
     Command string
     *log.Logger
@@ -75,15 +75,14 @@ type Job struct {
 
 The`Job`type now has the`Log`,`Logf`and other methods of`*log.Logger`. We could have given the`Logger`a field name, of course, but it's not necessary to do so. And now, once initialized, we can log to the`Job`:
 
-```
+```go
 job.Log("starting now...")
 
 ```
 
 The`Logger`is a regular field of the`Job`struct, so we can initialize it in the usual way inside the constructor for`Job`, like this,
 
-```
-
+```go
 func NewJob(command string, logger *log.Logger) *Job {
     return &Job{command, logger}
 }
@@ -92,9 +91,7 @@ func NewJob(command string, logger *log.Logger) *Job {
 
 or with a composite literal,
 
-```
-
-
+```go
 job := &Job{command, log.New(os.Stderr, "Job: ", log.Ldate)}
 ```
 

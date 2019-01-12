@@ -121,7 +121,7 @@ v := make([]int, 100)
 
 Remember that`make`applies only to maps, slices and channels and does not return a pointer. To obtain an explicit pointer allocate with`new`or take the address of a variable explicitly.
 
-### Arrays {#arrays}
+### Arrays 
 
 Arrays are useful when planning the detailed layout of memory and sometimes can help avoid allocation, but primarily they are a building block for slices, the subject of the next section. To lay the foundation for that topic, here are a few words about arrays.
 
@@ -147,7 +147,7 @@ x := Sum(&array)  // Note the explicit address-of operator
 
 But even this style isn't idiomatic Go. Use slices instead.
 
-### Slices {#slices}
+### Slices 
 
 Slices wrap arrays to give a more general, powerful, and convenient interface to sequences of data. Except for items with explicit dimension such as transformation matrices, most array programming in Go is done with slices rather than simple arrays.
 
@@ -200,7 +200,7 @@ We must return the slice afterwards because, although`Append`can modify the elem
 
 The idea of appending to a slice is so useful it's captured by the`append`built-in function. To understand that function's design, though, we need a little more information, so we'll return to it later.
 
-### Two-dimensional slices {#two_dimensional_slices}
+### Two-dimensional slices 
 
 Go's arrays and slices are one-dimensional. To create the equivalent of a 2D array or slice, it is necessary to define an array-of-arrays or slice-of-slices, like this:
 
@@ -243,7 +243,7 @@ for i := range picture {
 }
 ```
 
-### Maps {#maps}
+### Maps 
 
 Maps are a convenient and powerful built-in data structure that associate values of one type \(the_key_\) with values of another type \(the_element\_or\_value_\). The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces \(as long as the dynamic type supports equality\), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
 
@@ -311,7 +311,7 @@ To delete a map entry, use the`delete`built-in function, whose arguments are the
 delete(timeZone, "PDT")  // Now on Standard Time
 ```
 
-### Printing {#printing}
+### Printing 
 
 Formatted printing in Go uses a style similar to C's`printf`family but is richer and more general. The functions live in the`fmt`package and have capitalized names:`fmt.Printf`,`fmt.Fprintf`,`fmt.Sprintf`and so on. The string functions \(`Sprintf`etc.\) return a string rather than filling in a provided buffer.
 
@@ -460,7 +460,7 @@ func Min(a ...int) int {
 }
 ```
 
-### Append {#append}
+### Append 
 
 Now we have the missing piece we needed to explain the design of the`append`built-in function. The signature of`append`is different from our custom`Append`function above. Schematically, it's like this:
 
