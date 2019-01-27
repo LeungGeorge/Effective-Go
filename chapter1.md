@@ -47,20 +47,17 @@ type T struct {
 * Go 比 C 和 Java 需要的括号更少：控制结构（`if`，`for`，`switch`）无需括号。此外，运算符优先层次也更短、更清晰。因此，`x<<8 + y<<16` 的含义也就由空格表明了，这是与其他语言不同的。
 
 > All Go code in the standard packages has been formatted with`gofmt`.
->
+> 
 > Some formatting details remain. Very briefly:
->
+> 
 > **Indentation**
->
-> * We use tabs for indentation and`gofmt`emits them by default. Use spaces only if you must.
->
+> 
+> * We use tabs for indentation and `gofmt` emits them by default. Use spaces only if you must.
+> 
 > **Line length**
->
+> 
 > * Go has no line length limit. Don't worry about overflowing a punched card. If a line feels too long, wrap it and indent with an extra tab.
->
+> 
 > **Parentheses**
->
-> * Go needs fewer parentheses than C and Java: control structures \(`if`,`for`,`switch`\) do not have parentheses in their syntax. Also, the operator precedence hierarchy is shorter and clearer, so  `x<<8 + y<<16` means what the spacing implies, unlike in the other languages.
-
-
-
+> 
+> * Go needs fewer parentheses than C and Java: control structures \(`if`, `for` , `switch`\) do not have parentheses in their syntax. Also, the operator precedence hierarchy is shorter and clearer, so  `x<<8 + y<<16` means what the spacing implies, unlike in the other languages.

@@ -58,6 +58,3 @@ if owner != user {
 最后，在Go中有这样一个约定，使用混合大小写的形式（类似驼峰，但是注意首字母），而不是下划线，来写多单词的名字。
 
 > Finally, the convention in Go is to use`MixedCaps`or`mixedCaps`rather than underscores to write multiword names.
-
-
-

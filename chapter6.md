@@ -1,4 +1,3 @@
-
 ### 多个返回值
 
 `Go`的一个不同寻常的特性就是，函数和方法可以返回多个值。这种形式可以用来改进`C`程序中一些笨拙的习语：一些标志性的错误，例如用`-1`表示`EOF`，并且修改传递的地址参数。
@@ -9,19 +8,15 @@
 > 
 > In C, a write error is signaled by a negative count with the error code secreted away in a volatile location. In Go, Write can return a count and an error: “Yes, you wrote some bytes but not all of them because you filled the device”. The signature of the Write method on files from package os is:
 
-
 ```go
 func (file *File) Write(b []byte) (n int, err error)
 ```
 
 如文档所说，它返回写入的字节数，当`n != len(b)`时会返回一个非`nil`的错误。这是一种常见的风格；有关更多示例，请参考错误处理部分。
 
-
 > and as the documentation says, it returns the number of bytes written and a non-nil error when n != len(b). This is a common style; see the section on error handling for more examples.
 
-
 类似的方法排除了向返回值传递指针以模拟引用参数的必要。这里有一个简单的函数，从直接切片中获取一个数字，并返回这个数字和下一个位置。
- 
 
 > A similar approach obviates the need to pass a pointer to a return value to simulate a reference parameter. Here's a simple-minded function to grab a number from a position in a byte slice, returning the number and the next position.
 
@@ -35,11 +30,9 @@ func nextInt(b []byte, i int) (int, int) {
     }
     return x, i
 }
-
 ```
 
 你可以使用它（上面的函数），去扫描切片`b`中的数字。
-
 
 > You could use it to scan the numbers in an input slice b like this:
 
@@ -58,7 +51,6 @@ Go中函数的返回值是可以指定名字的，并可以像常规变量一样
 
 返回值的名字并非强制性的，但是它们可以让代码看起来更简短、更清晰：它们就是文档本身。如果我们给nextInt的返回值指定名字话，每个int所代表的含义就很明显了。
 
-
 > The names are not mandatory but they can make code shorter and clearer: they're documentation. If we name the results of nextInt it becomes obvious which returned int is which.
 
 ```go
@@ -70,7 +62,6 @@ func nextInt(b []byte, pos int) (value, nextPos int) {
 Go的defer语句会安排一个函数调用（defer函数），使得在return之前立即执行defer函数。这是一个不同寻常但高效的方式，去处理类似的场景：不论从哪个函数分支返回，资源必须得到释放。典型的例子是解锁互斥锁，或者关闭文件。
 
 > Go's defer statement schedules a function call (the deferred function) to be run immediately before the function executing the defer returns. It's an unusual but effective way to deal with situations such as resources that must be released regardless of which path a function takes to return. The canonical examples are unlocking a mutex or closing a file.
-
 
 ```go
 // Contents returns the file's contents as a string.
@@ -105,7 +96,6 @@ func Contents(filename string) (string, error) {
 
 > The arguments to the deferred function (which include the receiver if the function is a method) are evaluated when the defer executes, not when the call executes. Besides avoiding worries about variables changing values as the function executes, this means that a single deferred call site can defer multiple function executions. Here's a silly example.
 
-
 ```go
 for i := 0; i < 5; i++ {
     defer fmt.Printf("%d ", i)
@@ -114,10 +104,9 @@ for i := 0; i < 5; i++ {
 
 `defer`函数的执行遵循`LIFO`的顺序，因此，这段代码在返回时会打印出 `4 3 2 1`。另一个更加可信的例子是，这是一种简单的方式，它可以跟踪程序的执行过程。我们可以写出很多跟踪执行路径的例子，比如：
 
-
 > Deferred functions are executed in LIFO order, so this code will cause 4 3 2 1 0 to be printed when the function returns. A more plausible example is a simple way to trace function execution through the program. We could write a couple of simple tracing routines like this:
 
-```go 
+```go
 func trace(s string)   { fmt.Println("entering:", s) }
 func untrace(s string) { fmt.Println("leaving:", s) }
 
@@ -132,9 +121,7 @@ func a() {
 我们可以更好地利用延迟函数的参数在延迟执行时计算这一事实。
 `traceing`为`untracing`设置参数。例如：
 
-
 > We can do better by exploiting the fact that arguments to deferred functions are evaluated when the defer executes. The tracing routine can set up the argument to the untracing routine. This example:
-
 
 ```go
 func trace(s string) string {
@@ -178,4 +165,3 @@ leaving: b
 来自于其他语言已经习惯于块资源管理的程序员来说，`defer`可能看起来有点奇怪，但是它是最有趣的，强大的应用恰恰来自于这样一个事实：它不是基于块而是基于函数的。在异常和恢复一节中，我们会看到另外一个例子，和它的可能性。
 
 > For programmers accustomed to block-level resource management from other languages, defer may seem peculiar, but its most interesting and powerful applications come precisely from the fact that it's not block-based but function-based. In the section on panic and recover we'll see another example of its possibilities.
-
